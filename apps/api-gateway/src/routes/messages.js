@@ -3,12 +3,14 @@ const router = express.Router();
 const axios = require("axios");
 const { db } = require("../utils/db");
 const { logger } = require("../utils/logger");
+const { validate, schemas } = require("../middleware/validate");
+const { v4: uuidv4 } = require("uuid");
 
 const MESSAGING_URL =
   process.env.MESSAGING_SERVICE_URL || "http://localhost:3002";
 
 // POST /api/v1/messages/send
-router.post("/send", async (req, res) => {
+router.post("/send", validate(schemas.sendMessage), async (req, res) => {
   try {
     const { phone, message, type = "text", mediaUrl } = req.body;
     if (!phone || !message)

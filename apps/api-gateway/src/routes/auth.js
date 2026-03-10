@@ -5,9 +5,10 @@ const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const { db } = require("../utils/db");
 const { logger } = require("../utils/logger");
+const { validate, schemas } = require("../middleware/validate");
 
 // POST /api/v1/auth/register
-router.post("/register", async (req, res) => {
+router.post("/register", validate(schemas.register), async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password)
