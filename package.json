@@ -1,0 +1,19 @@
+{
+  "name": "wapp-flow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WApp Flow — Universal WhatsApp Automation Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "plugins/shopify"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=apps/api-gateway\" \"npm run dev --workspace=apps/messaging-service\" \"npm run dev --workspace=apps/automation-engine\" \"npm run dev --workspace=apps/ai-service\" \"npm run dev --workspace=apps/analytics-service\" \"npm run dev --workspace=apps/webhook-handler\" \"npm run dev --workspace=apps/dashboard\"",
+    "build": "npm run build --workspaces",
+    "install:all": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

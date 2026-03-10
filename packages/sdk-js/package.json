@@ -1,0 +1,23 @@
+{
+  "name": "whatsapp-automation-sdk",
+  "version": "1.0.0",
+  "description": "JavaScript/Node.js SDK for WhatsApp Automation Platform",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "files": [
+    "src/"
+  ],
+  "keywords": [
+    "whatsapp",
+    "automation",
+    "sdk",
+    "waba"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
