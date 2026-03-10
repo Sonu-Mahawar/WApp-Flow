@@ -1,0 +1,21 @@
+# WApp Flow — Robots.txt
+# digitalatlus.in
+
+User-agent: *
+Allow: /
+
+# Block sensitive API/admin paths from indexing
+Disallow: /api/
+Disallow: /settings
+Disallow: /api-keys
+Disallow: /inbox
+
+# Allow all bots to crawl SEO-relevant pages
+Allow: /$
+Allow: /login
+
+# Sitemap
+Sitemap: https://digitalatlus.in/sitemap.xml
+
+# Crawl-delay for polite bots
+Crawl-delay: 10

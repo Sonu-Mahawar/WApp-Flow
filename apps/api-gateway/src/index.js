@@ -5,6 +5,16 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const { logger } = require("./utils/logger");
 
+// Performance
+let compression;
+try {
+  compression = require("compression");
+} catch {
+  compression = null;
+}
+
+const { cacheMiddleware } = require("./middleware/cache");
+
 // Route imports
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
@@ -24,6 +34,18 @@ const { rateLimiter, strictRateLimiter } = require("./middleware/rateLimiter");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const IS_PROD = process.env.NODE_ENV === "production";
+
+// ─── 0. GZIP COMPRESSION (reduces response sizes 70–90%) ──────────────────────
+if (compression) {
+  app.use(compression({ threshold: 512 })); // compress responses > 512 bytes
+}
+
+// ─── 0b. REQUEST ID TRACKING ──────────────────────────────────────────────────
+app.use((req, _res, next) => {
+  req.id = req.headers["x-request-id"] || require("crypto").randomUUID();
+  _res.setHeader("X-Request-ID", req.id);
+  next();
+});
 
 // ─── 1. SECURITY — Helmet with strict headers ─────────────────────────────────
 app.use(

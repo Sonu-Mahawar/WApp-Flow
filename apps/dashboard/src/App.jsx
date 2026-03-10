@@ -21,20 +21,54 @@ import {
   Settings,
   LogOut,
 } from "lucide-react";
-import OverviewPage from "./pages/Overview.jsx";
-import MessagesPage from "./pages/Messages.jsx";
-import AutomationsPage from "./pages/Automations.jsx";
-import CampaignsPage from "./pages/Campaigns.jsx";
-import TemplatesPage from "./pages/Templates.jsx";
-import ContactsPage from "./pages/Contacts.jsx";
-import AnalyticsPage from "./pages/Analytics.jsx";
-import AIChatbotPage from "./pages/AIChatbot.jsx";
-import InboxPage from "./pages/Inbox.jsx";
-import ApiKeysPage from "./pages/ApiKeys.jsx";
-import SettingsPage from "./pages/SettingsPage.jsx";
-import PluginsPage from "./pages/Plugins.jsx";
-import LoginPage from "./pages/Login.jsx";
+import { lazy, Suspense } from "react";
+
+// ─── Lazy-loaded pages (code-split per route — massive perf win) ──────────────
+const OverviewPage = lazy(() => import("./pages/Overview.jsx"));
+const MessagesPage = lazy(() => import("./pages/Messages.jsx"));
+const AutomationsPage = lazy(() => import("./pages/Automations.jsx"));
+const CampaignsPage = lazy(() => import("./pages/Campaigns.jsx"));
+const TemplatesPage = lazy(() => import("./pages/Templates.jsx"));
+const ContactsPage = lazy(() => import("./pages/Contacts.jsx"));
+const AnalyticsPage = lazy(() => import("./pages/Analytics.jsx"));
+const AIChatbotPage = lazy(() => import("./pages/AIChatbot.jsx"));
+const InboxPage = lazy(() => import("./pages/Inbox.jsx"));
+const ApiKeysPage = lazy(() => import("./pages/ApiKeys.jsx"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage.jsx"));
+const PluginsPage = lazy(() => import("./pages/Plugins.jsx"));
+const LoginPage = lazy(() => import("./pages/Login.jsx"));
+
 import { useStore } from "./store.js";
+
+// ─── Page loading fallback ────────────────────────────────────────────────────
+function PageLoader() {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "60vh",
+        flexDirection: "column",
+        gap: 16,
+      }}
+    >
+      <div
+        style={{
+          width: 40,
+          height: 40,
+          border: "3px solid var(--border)",
+          borderTop: "3px solid var(--green)",
+          borderRadius: "50%",
+          animation: "spin 0.8s linear infinite",
+        }}
+      />
+      <span style={{ color: "var(--text-muted)", fontSize: 13 }}>
+        Loading...
+      </span>
+    </div>
+  );
+}
 
 const navItems = [
   { label: "Overview", icon: LayoutDashboard, to: "/" },
@@ -181,113 +215,113 @@ function ProtectedApp() {
   return (
     <div className="app-layout">
       <Sidebar />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Layout
-              title="Overview"
-              subtitle="Your WhatsApp platform at a glance"
-            >
-              <OverviewPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/messages"
-          element={
-            <Layout title="Messages" subtitle="Send and manage messages">
-              <MessagesPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/inbox"
-          element={
-            <Layout title="Inbox" subtitle="Multi-agent customer inbox">
-              <InboxPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/automations"
-          element={
-            <Layout title="Automations" subtitle="Workflow automation engine">
-              <AutomationsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/campaigns"
-          element={
-            <Layout title="Campaigns" subtitle="Broadcast to thousands">
-              <CampaignsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/templates"
-          element={
-            <Layout title="Templates" subtitle="Message templates">
-              <TemplatesPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/contacts"
-          element={
-            <Layout title="Contacts" subtitle="CRM contact management">
-              <ContactsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/analytics"
-          element={
-            <Layout title="Analytics" subtitle="Performance insights">
-              <AnalyticsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/ai-chatbot"
-          element={
-            <Layout
-              title="AI Chatbot"
-              subtitle="Intelligent conversation agent"
-            >
-              <AIChatbotPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/plugins"
-          element={
-            <Layout title="Plugins & SDKs" subtitle="Integrate everywhere">
-              <PluginsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/api-keys"
-          element={
-            <Layout title="API Keys" subtitle="Manage access keys">
-              <ApiKeysPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/settings"
-          element={
-            <Layout
-              title="Settings"
-              subtitle="Account & WhatsApp configuration"
-            >
-              <SettingsPage />
-            </Layout>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout
+                title="Overview"
+                subtitle="Your WhatsApp platform at a glance"
+              >
+                <OverviewPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <Layout title="Messages" subtitle="Send and manage messages">
+                <MessagesPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <Layout title="Inbox" subtitle="Multi-agent customer inbox">
+                <InboxPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/automations"
+            element={
+              <Layout title="Automations" subtitle="Workflow automation engine">
+                <AutomationsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/campaigns"
+            element={
+              <Layout title="Campaigns" subtitle="Broadcast to thousands">
+                <CampaignsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/templates"
+            element={
+              <Layout title="Templates" subtitle="Message templates">
+                <TemplatesPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/contacts"
+            element={
+              <Layout title="Contacts" subtitle="CRM contact management">
+                <ContactsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <Layout title="Analytics" subtitle="Performance insights">
+                <AnalyticsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/ai-chatbot"
+            element={
+              <Layout
+                title="AI Chatbot"
+                subtitle="Intelligent conversation agent"
+              >
+                <AIChatbotPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/plugins"
+            element={
+              <Layout title="Plugins & SDKs" subtitle="Integrate everywhere">
+                <PluginsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/api-keys"
+            element={
+              <Layout title="API Keys" subtitle="Manage access keys">
+                <ApiKeysPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <Layout title="Settings" subtitle="Configure your workspace">
+                <SettingsPage />
+              </Layout>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }
@@ -306,7 +340,14 @@ export default function App() {
         }}
       />
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<PageLoader />}>
+              <LoginPage />
+            </Suspense>
+          }
+        />
         <Route path="/*" element={<ProtectedApp />} />
       </Routes>
     </BrowserRouter>
